@@ -322,8 +322,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   levelContainer: {
-    flexDirection: 'row',
-    gap: 8,
     marginBottom: 4,
   },
   userTitle: {

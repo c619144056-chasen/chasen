@@ -147,7 +147,7 @@ export default function GroupChatModal({
         {!isOwnMessage && (
           <Image 
             source={{ 
-              uri: message.user_profiles?.avatar_url || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
+              uri: message.user_profile?.avatar_url || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
             }} 
             style={styles.messageAvatar} 
           />
@@ -159,14 +159,14 @@ export default function GroupChatModal({
         ]}>
           {!isOwnMessage && (
             <Text style={styles.messageAuthor}>
-              {message.user_profiles?.username || '匿名用户'}
+              {message.user_profile?.username || '匿名用户'}
             </Text>
           )}
           
           {message.reply_message && (
             <View style={styles.replyContainer}>
               <Text style={styles.replyAuthor}>
-                回复 {message.reply_message.user_profiles?.username}
+                回复 {message.reply_message.user_profile?.username}
               </Text>
               <Text style={styles.replyContent} numberOfLines={2}>
                 {message.reply_message.content}
