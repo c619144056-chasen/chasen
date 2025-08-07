@@ -1,5 +1,4 @@
 import { supabase } from '../lib/supabase';
-import { sql } from '@supabase/supabase-js';
 import { CommunityPost } from '../lib/supabase';
 
 export class CommunityService {
@@ -106,7 +105,7 @@ export class CommunityService {
         // 增加点赞数
         const { error: updateError } = await supabase
           .from('community_posts')
-          .update({ likes_count: sql`likes_count + 1` })
+          .rpc('increment_likes_count', { post_id: postId })
           .eq('id', postId);
 
         if (updateError) throw updateError;
@@ -143,7 +142,7 @@ export class CommunityService {
       // 增加评论数
       await supabase
         .from('community_posts')
-        .update({ comments_count: sql`comments_count + 1` })
+        .rpc('increment_comments_count', { post_id: postId })
         .eq('id', postId);
 
       // 发送评论通知给动态作者
@@ -501,7 +500,7 @@ export class CommunityService {
       // 增加分享数
       const { error } = await supabase
         .from('community_posts')
-        .update({ shares_count: sql`shares_count + 1` })
+        .rpc('increment_shares_count', { post_id: postId })
         .eq('id', postId);
 
       if (error) throw error;

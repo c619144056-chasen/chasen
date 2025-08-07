@@ -29,7 +29,7 @@ export default function ProfileScreen() {
     
     setUpdating(true);
     try {
-      const updates = {};
+      const updates: any = {};
       if (key === 'notifications') {
         updates['notifications_enabled'] = value;
       } else if (key === 'location') {

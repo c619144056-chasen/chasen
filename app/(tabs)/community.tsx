@@ -125,7 +125,7 @@ export default function CommunityScreen() {
           post.id === postId 
             ? { 
                 ...post, 
-                likes_count: data?.liked 
+                likes_count: (data as any)?.liked 
                   ? post.likes_count + 1 
                   : post.likes_count - 1 
               }

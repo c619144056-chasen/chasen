@@ -53,16 +53,16 @@ export class TaskService {
   }
 
   // 智能生成任务
-  static async generateSmartTask(userId: string) {
+  static async generateSmartTask(userId: string, userLevel = 1) {
     try {
       // 获取用户信息
       const { data: userProfile } = await supabase
         .from('user_profiles')
         .select('level, social_level')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      const userLevel = userProfile?.level || 1;
+      const actualUserLevel = userProfile?.level || userLevel;
       const socialLevel = userProfile?.social_level || 1;
 
       // 获取随机目的地
@@ -80,7 +80,7 @@ export class TaskService {
       const { data: outdoorGoals } = await supabase
         .from('outdoor_goals_data')
         .select('*')
-        .lte('min_user_level', userLevel)
+        .lte('min_user_level', actualUserLevel)
         .or(`applicable_destination_type.eq.${randomDestination.type},applicable_destination_type.is.null`);
 
       // 获取适合的社交目标
@@ -168,7 +168,7 @@ export class TaskService {
   }
 
   // 完成任务
-  static async completeTask(taskId: string, completionData: {
+  static async completeTask(userId: string, taskId: string, completionData: {
     completion_photos?: string[];
     completion_notes?: string;
     rating?: number;
@@ -194,7 +194,7 @@ export class TaskService {
       const { error: completionError } = await supabase
         .from('task_completions')
         .insert({
-          user_id: task.user_id,
+          user_id: userId,
           task_id: taskId,
           completion_photos: completionData.completion_photos || [],
           completion_notes: completionData.completion_notes,
@@ -221,7 +221,7 @@ export class TaskService {
       if (updateError) throw updateError;
 
       // 更新用户积分和统计
-      await this.updateUserStats(task.user_id, totalPoints, outdoorPoints, socialPoints);
+      await this.updateUserStats(userId, totalPoints, outdoorPoints, socialPoints);
 
       return { data: updatedTask, error: null };
     } catch (error) {
@@ -305,24 +305,32 @@ export class TaskService {
         .eq('id', userId)
         .single();
 
-      const { data: completions } = await supabase
-        .from('task_completions')
-        .select('rating')
+      const { data: tasks } = await supabase
+        .from('daily_tasks')
+        .select('*')
         .eq('user_id', userId);
 
-      const averageRating = completions && completions.length > 0
-        ? completions.reduce((sum, c) => sum + (c.rating || 0), 0) / completions.length
+      const completedTasks = tasks?.filter(t => t.status === 'completed') || [];
+      const averageRating = completedTasks.length > 0
+        ? completedTasks.reduce((sum, t) => sum + (t.rating || 0), 0) / completedTasks.length
         : 0;
 
       return {
         data: {
+          total: tasks?.length || 0,
+          completed: completedTasks.length,
           completedTasks: profile?.completed_tasks || 0,
           totalPoints: profile?.points || 0,
           socialPoints: profile?.social_points || 0,
           currentStreak: profile?.streak || 0,
           level: profile?.level || 1,
           socialLevel: profile?.social_level || 1,
-          averageRating: Math.round(averageRating * 10) / 10
+          averageRating: Math.round(averageRating * 10) / 10,
+          byDifficulty: {
+            easy: completedTasks.filter(t => t.difficulty === 'easy').length,
+            medium: completedTasks.filter(t => t.difficulty === 'medium').length,
+            hard: completedTasks.filter(t => t.difficulty === 'hard').length,
+          }
         },
         error: null
       };

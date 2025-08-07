@@ -171,7 +171,7 @@ export class GroupService {
       // 更新小组成员数
       await supabase
         .from('interest_groups')
-        .update({ member_count: supabase.sql`member_count + 1` })
+        .rpc('increment_member_count', { group_id: groupId })
         .eq('id', groupId);
 
       // 获取用户信息并发送加入消息
@@ -206,7 +206,7 @@ export class GroupService {
       // 更新小组成员数
       await supabase
         .from('interest_groups')
-        .update({ member_count: supabase.sql`member_count - 1` })
+        .rpc('decrement_member_count', { group_id: groupId })
         .eq('id', groupId);
 
       return { error: null };
