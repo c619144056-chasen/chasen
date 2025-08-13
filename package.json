@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "expo start --web --clear",
     "start": "expo start --web --clear",
-    "build:web": "expo export:web",
-    "build": "expo export:web",
+    "build:web": "expo export",
+    "build": "expo export",
     "lint": "expo lint"
   },
   "dependencies": {
