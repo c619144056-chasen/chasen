@@ -58,20 +58,11 @@ export default function HomeScreen() {
     setError(null);
     
     try {
-      const { data: task } = await TaskService.getTodayTask(user.id);
-      if (!task) {
-        // 如果没有今日任务，生成一个
-        const { data: newTask } = await TaskService.generateSmartTask(
-          user.id, 
-          userProfile?.level || 1
-        );
-        if (isMounted) {
-          setTodayTask(newTask);
-        }
-      } else {
-        if (isMounted) {
-          setTodayTask(task);
-        }
+      const { data: task, error: taskError } = await TaskService.getTodayTask(user.id);
+      if (taskError) throw taskError;
+      
+      if (isMounted) {
+        setTodayTask(task);
       }
     } catch (error) {
       if (isMounted) {

@@ -88,11 +88,9 @@ export class CommunityService {
           .eq('user_id', userId)
           .eq('post_id', postId);
 
-        // 减少点赞数
+        // 减少点赞数 
         const { error: updateError } = await supabase
-          .from('community_posts')
-          .update({ likes_count: sql`likes_count - 1` })
-          .eq('id', postId);
+          .rpc('decrement_likes_count', { post_id: postId });
 
         if (updateError) throw updateError;
         return { data: { liked: false }, error: null };
@@ -104,9 +102,7 @@ export class CommunityService {
 
         // 增加点赞数
         const { error: updateError } = await supabase
-          .from('community_posts')
-          .rpc('increment_likes_count', { post_id: postId })
-          .eq('id', postId);
+          .rpc('increment_likes_count', { post_id: postId });
 
         if (updateError) throw updateError;
         
@@ -141,9 +137,7 @@ export class CommunityService {
 
       // 增加评论数
       await supabase
-        .from('community_posts')
-        .rpc('increment_comments_count', { post_id: postId })
-        .eq('id', postId);
+        .rpc('increment_comments_count', { post_id: postId });
 
       // 发送评论通知给动态作者
       await this.sendInteractionNotification(userId, postId, 'comment');

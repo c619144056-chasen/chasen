@@ -169,9 +169,13 @@ export class TaskService {
 
   // 完成任务
   static async completeTask(userId: string, taskId: string, completionData: {
-    completion_photos?: string[];
-    completion_notes?: string;
+    photos?: string[];
+    notes?: string;
     rating?: number;
+    outdoorCompleted?: boolean;
+    socialCompleted?: boolean;
+    outdoorPointsEarned?: number;
+    socialPointsEarned?: number;
   }) {
     try {
       // 获取任务信息
@@ -185,10 +189,10 @@ export class TaskService {
         throw new Error('任务不存在');
       }
 
-      // 计算积分分配
-      const totalPoints = task.points || 50;
-      const outdoorPoints = Math.floor(totalPoints * 0.6);
-      const socialPoints = totalPoints - outdoorPoints;
+      // 使用传入的积分数据
+      const outdoorPoints = completionData.outdoorPointsEarned || 0;
+      const socialPoints = completionData.socialPointsEarned || 0;
+      const totalPoints = outdoorPoints + socialPoints;
 
       // 创建完成记录
       const { error: completionError } = await supabase
@@ -196,11 +200,11 @@ export class TaskService {
         .insert({
           user_id: userId,
           task_id: taskId,
-          completion_photos: completionData.completion_photos || [],
-          completion_notes: completionData.completion_notes,
+          completion_photos: completionData.photos || [],
+          completion_notes: completionData.notes,
           rating: completionData.rating,
-          outdoor_completed: true,
-          social_completed: true,
+          outdoor_completed: completionData.outdoorCompleted !== false,
+          social_completed: completionData.socialCompleted !== false,
           outdoor_points_earned: outdoorPoints,
           social_points_earned: socialPoints
         });

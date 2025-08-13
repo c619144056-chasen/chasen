@@ -330,38 +330,73 @@ export class AchievementService {
       }
 
       case 'upload_25_photos': {
-        const tasksWithPhotos25 = completedTasks.filter(t => 
-          t.completion_photos && t.completion_photos.length > 0
-        );
-        return tasksWithPhotos25.length >= 25;
+        const { data: completionsWithPhotos } = await supabase
+          .from('task_completions')
+          .select('completion_photos')
+          .eq('user_id', profile.id)
+          .not('completion_photos', 'is', null);
+        
+        const photosCount = completionsWithPhotos?.filter(c => 
+          c.completion_photos && c.completion_photos.length > 0
+        ).length || 0;
+        
+        return photosCount >= 25;
       }
 
       case 'upload_35_photos': {
-        const tasksWithPhotos35 = completedTasks.filter(t => 
-          t.completion_photos && t.completion_photos.length > 0
-        );
-        return tasksWithPhotos35.length >= 35;
+        const { data: completionsWithPhotos } = await supabase
+          .from('task_completions')
+          .select('completion_photos')
+          .eq('user_id', profile.id)
+          .not('completion_photos', 'is', null);
+        
+        const photosCount = completionsWithPhotos?.filter(c => 
+          c.completion_photos && c.completion_photos.length > 0
+        ).length || 0;
+        
+        return photosCount >= 35;
       }
 
       case 'upload_50_photos': {
-        const tasksWithPhotos50 = completedTasks.filter(t => 
-          t.completion_photos && t.completion_photos.length > 0
-        );
-        return tasksWithPhotos50.length >= 50;
+        const { data: completionsWithPhotos } = await supabase
+          .from('task_completions')
+          .select('completion_photos')
+          .eq('user_id', profile.id)
+          .not('completion_photos', 'is', null);
+        
+        const photosCount = completionsWithPhotos?.filter(c => 
+          c.completion_photos && c.completion_photos.length > 0
+        ).length || 0;
+        
+        return photosCount >= 50;
       }
 
       case 'upload_75_photos': {
-        const tasksWithPhotos75 = completedTasks.filter(t => 
-          t.completion_photos && t.completion_photos.length > 0
-        );
-        return tasksWithPhotos75.length >= 75;
+        const { data: completionsWithPhotos } = await supabase
+          .from('task_completions')
+          .select('completion_photos')
+          .eq('user_id', profile.id)
+          .not('completion_photos', 'is', null);
+        
+        const photosCount = completionsWithPhotos?.filter(c => 
+          c.completion_photos && c.completion_photos.length > 0
+        ).length || 0;
+        
+        return photosCount >= 75;
       }
 
       case 'upload_100_photos': {
-        const tasksWithPhotos100 = completedTasks.filter(t => 
-          t.completion_photos && t.completion_photos.length > 0
-        );
-        return tasksWithPhotos100.length >= 100;
+        const { data: completionsWithPhotos } = await supabase
+          .from('task_completions')
+          .select('completion_photos')
+          .eq('user_id', profile.id)
+          .not('completion_photos', 'is', null);
+        
+        const photosCount = completionsWithPhotos?.filter(c => 
+          c.completion_photos && c.completion_photos.length > 0
+        ).length || 0;
+        
+        return photosCount >= 100;
       }
 
       // 社区互动成就

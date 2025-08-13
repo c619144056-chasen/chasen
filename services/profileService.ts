@@ -143,14 +143,19 @@ export class ProfileService {
 
       // 如果没有偏好设置，返回默认值
       if (!data) {
+        const defaultPrefs = {
+          notifications_enabled: true,
+          location_enabled: true,
+          difficulty_preference: 'medium',
+          activity_types: ['walking', 'photography', 'meditation'],
+          reminder_time: '09:00'
+        };
+        
+        // 创建默认偏好设置
+        await this.updateUserPreferences(userId, defaultPrefs);
+        
         return {
-          data: {
-            notifications_enabled: true,
-            location_enabled: true,
-            difficulty_preference: 'medium',
-            activity_types: ['walking', 'photography', 'meditation'],
-            reminder_time: '09:00'
-          },
+          data: defaultPrefs,
           error: null
         };
       }

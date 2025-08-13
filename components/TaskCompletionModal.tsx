@@ -146,16 +146,20 @@ export default function TaskCompletionModal({
   };
 
   const handleComplete = async () => {
-    // 计算分别获得的积分
-    const outdoorPoints = outdoorCompleted ? Math.floor((task?.points || 50) * 0.6) : 0;
-    const socialPoints = socialCompleted ? Math.floor((task?.points || 50) * 0.4) : 0;
-    
     setCompleting(true);
     try {
+      // 计算分别获得的积分
+      const outdoorPoints = outdoorCompleted ? Math.floor((task?.points || 50) * 0.6) : 0;
+      const socialPoints = socialCompleted ? Math.floor((task?.points || 50) * 0.4) : 0;
+      
       await onComplete({
         photos,
         notes,
         rating,
+        outdoorCompleted,
+        socialCompleted,
+        outdoorPointsEarned: outdoorPoints,
+        socialPointsEarned: socialPoints,
       });
       
       // 重置表单

@@ -29,14 +29,17 @@ export default function ProfileScreen() {
     
     setUpdating(true);
     try {
-      const updates: any = {};
+      // 获取当前偏好设置
+      const { data: currentPrefs } = await ProfileService.getUserPreferences(user.id);
+      
+      const updates: any = { ...currentPrefs };
       if (key === 'notifications') {
         updates['notifications_enabled'] = value;
       } else if (key === 'location') {
         updates['location_enabled'] = value;
       }
       
-      const { error } = await AuthService.updateUserProfile(user.id, updates);
+      const { error } = await ProfileService.updateUserPreferences(user.id, updates);
       if (error) throw error;
       
     } catch (error) {

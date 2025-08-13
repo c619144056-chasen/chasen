@@ -170,9 +170,7 @@ export class GroupService {
 
       // 更新小组成员数
       await supabase
-        .from('interest_groups')
-        .rpc('increment_member_count', { group_id: groupId })
-        .eq('id', groupId);
+        .rpc('increment_member_count', { group_id: groupId });
 
       // 获取用户信息并发送加入消息
       const { data: userProfile } = await supabase
@@ -205,9 +203,7 @@ export class GroupService {
 
       // 更新小组成员数
       await supabase
-        .from('interest_groups')
-        .rpc('decrement_member_count', { group_id: groupId })
-        .eq('id', groupId);
+        .rpc('decrement_member_count', { group_id: groupId });
 
       return { error: null };
     } catch (error) {

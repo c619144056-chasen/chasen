@@ -95,6 +95,10 @@ export default function TasksScreen() {
     photos: string[];
     notes: string;
     rating: number;
+    outdoorCompleted?: boolean;
+    socialCompleted?: boolean;
+    outdoorPointsEarned?: number;
+    socialPointsEarned?: number;
   }) => {
     if (!todayTask || !user) return;
     
