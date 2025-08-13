@@ -5,4 +5,7 @@ const config = getDefaultConfig(__dirname);
 // Add support for web
 config.resolver.platforms = ['ios', 'android', 'native', 'web'];
 
+// Ensure proper asset resolution for web
+config.resolver.assetExts.push('svg');
+
 module.exports = config;

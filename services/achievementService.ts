@@ -574,8 +574,13 @@ export class AchievementService {
       }
 
       case 'quality_seeker': {
-        const highRatedTasks = completedTasks.filter(t => t.rating >= 4);
-        return highRatedTasks.length >= 20;
+        const { data: highRatedCompletions } = await supabase
+          .from('task_completions')
+          .select('rating')
+          .eq('user_id', profile.id)
+          .gte('rating', 4);
+        
+        return highRatedCompletions && highRatedCompletions.length >= 20;
       }
 
       case 'diverse_explorer': {
